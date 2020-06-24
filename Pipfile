@@ -1,0 +1,29 @@
+[[source]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+flask-script = "*"
+flask-migrate = "*"
+pymysql = "*"
+flask-cors = "*"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
+flask-restful = "*"
+flask-apscheduler = "*"
+flask-httpauth = "*"
+cryptography = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.7"

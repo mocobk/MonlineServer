@@ -1,0 +1,15 @@
+[
+  "test_auth.py::test_get_token",
+  "test_auth.py::test_get_token_with_error_account",
+  "test_auth.py::test_refresh_token",
+  "test_auth.py::test_refresh_token_with_error_token",
+  "test_auth.py::test_refresh_token_with_expired_token",
+  "test_users.py::test_get_users[fake_user0]",
+  "test_users.py::test_get_users[tmp_user0]",
+  "test_users.py::test_get_users1",
+  "test_users.py::test_get_users",
+  "test_users.py::test_get_users_with_no_permissions[tmp_user0]",
+  "test_users.py::test_get_single_user_info",
+  "test_users.py::test_get_users_info",
+  "test_user.py::test_get_users_info"
+]
