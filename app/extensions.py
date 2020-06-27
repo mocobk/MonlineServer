@@ -28,7 +28,7 @@ cors = CORS(supports_credentials=True)
 def register_extensions(app):
     cors.init_app(app)
 
-    db.init_app(app)
+    # db.init_app(app)
 
     migrate.init_app(app)
 

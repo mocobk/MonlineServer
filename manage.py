@@ -9,11 +9,11 @@ from flask_migrate import MigrateCommand
 from flask_script import Manager, Server
 
 from app import create_app
-from app.extensions import db, scheduler
+# from app.extensions import db, scheduler
 
 app = create_app()
-db.create_all(app=app)
-scheduler.start()
+# db.create_all(app=app)
+# scheduler.start()
 
 manager = Manager(app)
 

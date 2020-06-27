@@ -5,9 +5,10 @@
 # @Email  : mailmzb@qq.com
 # @Time   : 2020/1/8 14:39
 
-from app.api.v1 import test
+from app.api import test, tools
 
 
 BLUEPRINTS = [
     (test.blueprint, '/test'),
+    (tools.blueprint, '/tools'),
 ]

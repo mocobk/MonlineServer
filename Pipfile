@@ -21,9 +21,9 @@ flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 flask-restful = "*"
 flask-apscheduler = "*"
-flask-httpauth = "*"
-cryptography = "*"
 pytest = "*"
+requests = "*"
+yapf = "*"
 
 [requires]
 python_version = "3.7"
