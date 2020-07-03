@@ -3,17 +3,6 @@
 # @Author : mocobk
 # @Email : mailmzb@qq.com
 # @Time : 2020/6/25 5:26 下午
-"""
-import re
-print(1111)
-res = requests.post('https://www.baidu.com')
-print(res.text)
-"""
-import re
-import requests
-from dataclasses import dataclass
-from flask import g
-
 import argparse
 import json
 import re
@@ -21,9 +10,12 @@ import shlex
 import traceback
 import urllib.parse
 from collections import namedtuple
+from dataclasses import dataclass
 from json.decoder import JSONDecodeError
 from pprint import pformat
 
+import requests
+from flask import g
 from yapf.yapflib.yapf_api import FormatCode
 
 
@@ -162,16 +154,28 @@ def convert(raw_string):
         raw_string = raw_string.replace("\\\n", "")
         script = create_script(raw_string)
     except:
-        script = '解析出错啦！请检查输入是否有误。'
+        script = '解析出错啦！请检查输入格式是否有误。'
         traceback.print_exc()
     return script
 
 
 def _request_wrapper(func):
     def _request(*args, **kwargs):
-        print('请求被代理了')
+        # 避免用户重放 run 请求，以至于陷入死循环
+        if 'url' in kwargs:
+            url = kwargs['url']
+        elif len(args) == 1:
+            url = args[0]
+        elif len(args) > 1:
+            url = args[1]
+        else:
+            url = ''
+        if '/tools/convert2req/run' in url:
+            raise Exception('请求链接不合法')
+
         g.response = func(*args, **kwargs)
         return g.response
+
     return _request
 
 
@@ -192,8 +196,10 @@ class Code:
         return self.import_pattern.sub('', self.code)
 
     def run(self):
-        forbidden_exec = "exec = None\neval = None\n"
-        safe_code = forbidden_exec + self.safe_code
+
+        # forbidden_fun = 'lambda *args, **kwargs: print_out.append("warning: {} function is not allowed")'
+        # forbidden_exec = f"exec = {forbidden_fun.format('exec')}\neval = {forbidden_fun.format('eval')}\n"
+        safe_code = self.safe_code
 
         # 将 if __name__ == '__main__': 去掉，避免运行不到
         code_split = self.if_main_pattern.split(safe_code, 1)
@@ -204,12 +210,15 @@ class Code:
 
         print_out = []
 
-        def print(*args):
+        def _print(*args):
             args = list(map(lambda x: str(x), args))
             print_out.append(' '.join(args))
 
+        _exec = lambda *args, **kwargs: print_out.append("warning: exec function is not allowed")
+        _eval = lambda *args, **kwargs: print_out.append("warning: eval function is not allowed")
+
         try:
-            exec(safe_code)
+            exec(safe_code, {**globals(), 'print': _print, 'print_out': print_out, 'exec': _exec, 'eval': _eval})
         except Exception as e:
             print_out.append(str(e))
 

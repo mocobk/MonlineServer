@@ -6,14 +6,13 @@
 import base64
 
 from flask import Blueprint
-from requests import Response
-from json.decoder import JSONDecodeError
-
-from app.libs.flask_restful import Api, RequestParser
-from flask_restful import Resource
-from app.libs.response import Success
-from app.api.tools.py_request import convert, Code
 from flask import g
+from flask_restful import Resource
+from requests import Response
+
+from app.api.tools.py_request import convert, Code
+from app.libs.flask_restful import Api, RequestParser
+from app.libs.response import Success
 
 blueprint = Blueprint('tools', __name__)
 
@@ -26,7 +25,7 @@ class Convert2Request(Resource):
         parser = RequestParser()
         parser.add_argument('request')
         args = parser.parse_args()
-        return Success(data={'data': convert(args['request'])})
+        return Success(data={'code': convert(args['request'])})
 
 
 @api.resource('/convert2req/run')
@@ -49,6 +48,7 @@ class Convert2RequestRun(Resource):
                 'cookies': g.response.cookies.get_dict(),
                 'status': g.response.status_code,
                 'elapsed': g.response.elapsed.total_seconds(),
+                'method': g.response.request.method,
                 'image': image,
                 'print_out': print_out
             })
