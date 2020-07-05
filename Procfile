@@ -1,1 +1,0 @@
-web: uwsgi --http :5050 --wsgi-file manage.py --callable app
