@@ -1,8 +1,9 @@
-#[[source]]
-#name = "tuna"
-#url = "https://pypi.tuna.tsinghua.edu.cn/simple"
-#verify_ssl = true
-#
+[[source]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+
+
 [[source]]
 name = "pypi"
 url = "https://pypi.org/simple"
@@ -24,6 +25,7 @@ flask-apscheduler = "*"
 pytest = "*"
 requests = "*"
 yapf = "*"
+jieba = "*"
 
 [requires]
 python_version = "3.7"

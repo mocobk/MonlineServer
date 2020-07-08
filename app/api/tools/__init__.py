@@ -9,6 +9,7 @@ from flask import Blueprint
 from flask import g
 from flask_restful import Resource
 from requests import Response
+from jieba import lcut
 
 from app.api.tools.py_request import convert, Code
 from app.libs.flask_restful import Api, RequestParser
@@ -56,3 +57,12 @@ class Convert2RequestRun(Resource):
         return Success({
             'print_out': print_out
         })
+
+
+@api.resource('/big-bang')
+class BigBang(Resource):
+    def get(self):
+        parser = RequestParser()
+        parser.add_argument('text', location='args')
+        args = parser.parse_args()
+        return Success(data={'words': lcut(args['text'], cut_all=False, HMM=True, use_paddle=False)})
