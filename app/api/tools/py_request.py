@@ -74,7 +74,8 @@ class CurlParse:
         parser.add_argument('command')
         parser.add_argument('url')
         parser.add_argument('-d', '--data')
-        parser.add_argument('-b', '--data-binary', default=None)
+        parser.add_argument('--data-raw')
+        parser.add_argument('--data-binary')
         parser.add_argument('-X', default='')
         parser.add_argument('-H', '--header', action='append', default=[])
         parser.add_argument('--compressed', action='store_true')
@@ -83,7 +84,7 @@ class CurlParse:
         tokens = shlex.split(self.curl_command)
         parsed_args = parser.parse_args(tokens)
 
-        data = parsed_args.data or parsed_args.data_binary
+        data = parsed_args.data or parsed_args.data_raw or parsed_args.data_binary or None
         method = "get"
         if data:
             method = 'post'
