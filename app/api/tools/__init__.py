@@ -4,6 +4,7 @@
 # @Email : mailmzb@qq.com
 # @Time : 2020/6/25 9:20 下午
 import base64
+import json
 
 from flask import Blueprint
 from flask import g
@@ -13,7 +14,8 @@ from jieba import lcut
 
 from app.api.tools.py_request import convert, Code
 from app.libs.flask_restful import Api, RequestParser
-from app.libs.response import Success
+from app.libs.niu_predict import get_predict
+from app.libs.response import Success, BadRequest
 
 blueprint = Blueprint('tools', __name__)
 
@@ -66,3 +68,22 @@ class BigBang(Resource):
         parser.add_argument('text', location='args')
         args = parser.parse_args()
         return Success(data={'words': lcut(args['text'], cut_all=False, HMM=True, use_paddle=False)})
+
+
+@api.resource('/predict')
+class NiuPredict(Resource):
+    def get(self):
+        parser = RequestParser()
+        parser.add_argument('features', location='args')
+        args = parser.parse_args()
+        try:
+            features = json.loads(args['features'])
+            if not isinstance(features, list):
+                raise json.JSONDecodeError
+            if len(features) != 8:
+                raise BadRequest(message='features need 8 parameters')
+            predict, probability = get_predict(features)
+            return Success(data={'predict': predict, 'probability': probability})
+
+        except json.JSONDecodeError:
+            raise BadRequest()

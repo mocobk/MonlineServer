@@ -20,11 +20,25 @@ api = Api(blueprint)
 
 @api.resource('')
 class DemoTest(Resource):
+    @staticmethod
+    def get_host_ip():
+        """
+        查询本机ip地址
+        :return: ip
+        """
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.connect(('8.8.8.8', 80))
+            ip = s.getsockname()[0]
+        finally:
+            s.close()
+
+        return ip
+
     def get(self):
-        hostname = socket.gethostname()
         data = {
             'hostname': socket.gethostname(),
-            'ip': socket.gethostbyname(hostname),
+            'ip': self.get_host_ip(),
             'time': time.strftime('%Y-%m-%d %H:%M:%S'),
             'now': time.time()
         }
