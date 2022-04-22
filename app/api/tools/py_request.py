@@ -39,6 +39,15 @@ class FiddlerRawParse:
         full_url = first_line_list[1]
         url, query = parse_url(full_url)
         headers = self.parse_header()
+        if ":///" in url:
+            # 支持whistle 如果url中包含://，则认为是url缺少host,从headers中获取host
+            if 'host' in headers:
+                url_host = headers['host']
+            elif 'Host' in headers:
+                url_host = headers['Host']
+            else:
+                url_host = headers['domain']
+            url = f"https://{url_host}{url[3:]}"
         data = self.parse_body()
         return ParsedContext(method=method, url=url, query=query, headers=headers, data=data)
 
